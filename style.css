@@ -25,6 +25,10 @@ input, button {
     margin-bottom: 10px;
 }
 
+button:nth-of-type(1) {
+    margin-top: 30px;
+}
+
 input::placeholder {
     color: white;
 }
@@ -35,20 +39,22 @@ li {
     width: 300px;
     background: #0277bd;
     border-radius: 10px;
-    padding: 4px 20px 5px 20px;
+    /* padding: 4px 20px 5px 20px; */
     margin-bottom: 10px;
-    border-top: 20px solid #004c8c;
+    border-top: 15px solid #004c8c;
 }
 
 li:hover {
     background-color: #58a5f0;
 }
 
-.buttons, .inputs{
+.inputs{
     display: flex;
     flex-direction: column;
+    justify-content: center;
     width: 300px;
     margin-top: 30px;
+    height: 90vh;
 }
 
 a {
@@ -60,13 +66,21 @@ a {
 
 p {
     margin: 5px 0 5px 0px;
+    padding-left: 10px;
+}
+
+p:nth-of-type(1) {
+    background-color: #004c8c;
+    width: 300px;
+    padding: 0 0 5px 10px;
+    margin: 0;
 }
 
 ul {
     margin: 0;
     list-style-type: none;
-    height: 90vh;
     overflow: scroll;
+    height: 90vh;
 }
 
 input[type=number]::-webkit-inner-spin-button, 
