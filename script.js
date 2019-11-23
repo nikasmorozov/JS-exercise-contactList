@@ -1,16 +1,14 @@
-const CONTACTSTLIST = 'contactslist';
+const CONTACTSTLIST = '';
 let personList = JSON.parse(window.localStorage.getItem(CONTACTSTLIST)) || [];
 let personName = document.getElementById('personName');
 let personEmail = document.getElementById('personEmail');
 let personPhone = document.getElementById('personPhone');
-// let personPhone = document.getElementById('personPhone');
-
-
 
 makeList();
 
 document.getElementById('personAdd').addEventListener('click', push);
 document.getElementById('personLastDelete').addEventListener('click', personLastDelete);
+document.getElementById('deleteSelected').addEventListener('click', deleteSelected);
 // document.getElementById('pop').addEventListener('click', pop);
 // document.getElementById('shift').addEventListener('click', shift);
 // document.getElementById('reverse').addEventListener('click', reverse);
@@ -21,11 +19,22 @@ document.getElementById('personLastDelete').addEventListener('click', personLast
 
 
 function push() {
-    personList.push({name: personName.value, email: personEmail.value, phone: personPhone.value, isFavorite: true});
+    personList.push({ name: personName.value, email: personEmail.value, phone: personPhone.value, isChecked: false });
     window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
     makeList();
     clearInput();
 }
+
+
+function deleteSelected() {
+    personList = personList.filter(function (value) {
+        return value.isChecked == false;
+    });
+    window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
+    makeList();
+}
+
+
 
 // function unShift() {
 //     guestList.unshift(guestName.value);
@@ -39,30 +48,13 @@ function personLastDelete() {
     makeList();
 }
 
-// function shift() {
-//     guestList.shift();
-//     makeList();
-//     refresh();
-// }
-
-// function reverse() {
-//     guestList.reverse();
-//     makeList();
-//     refresh();
-// }
-
-// function splice() {
-//     guestList.splice(Number(userIndex.value) - 1, 1, guestName.value);
-//     makeList();
-//     refresh();
-// }
-
-// function spliceCopy() {
-//     guestList.splice(0, 1, '');
-//     guestList.copyWithin((guestList.length - 1), 0, 2);
-//     makeList();
-//     refresh();
-// }
+function inverseChecked(iForList) {
+    return function () {
+        personList[iForList].isChecked = !personList[iForList].isChecked;
+        window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
+        makeList();
+    }
+};
 
 // function sortAZ() {
 //     guestList.sort();
@@ -98,7 +90,7 @@ function makeList() {
     // Add it to the page
     document.getElementById('output').appendChild(listContainer);
     listContainer.appendChild(listElement);
-    
+
 
 
     for (i = 0; i < numberOfListItems; ++i) {
@@ -107,26 +99,27 @@ function makeList() {
 
         // Add the item text
         let checkbox = document.createElement('input');
+        let iForList = i;
+
         checkbox.type = "checkbox";
-        checkbox.checked = listData[i].isFavorite;
-        // checkbox.name = "name";
-        // checkbox.value = "value";
-        checkbox.id = "favoriteID";
+        checkbox.checked = listData[i].isChecked;
 
-        let label = document.createElement('label')
+        checkbox.addEventListener('click', inverseChecked(iForList));
 
+        checkbox.id = "checkboxID-" + i;
 
-        // listItem.textContent =listData[i].email + ' ' + listData[i].phone + ' ' + listData[i].isFavorite;
         const nameP = document.createElement('p');
         const emailLinkContainer = document.createElement('p');
         const emailLink = document.createElement('a');
         const phoneLinkContainer = document.createElement('p');
         const phoneLink = document.createElement('a');
+
         nameP.textContent = listData[i].name;
         emailLink.textContent = 'email: ' + listData[i].email;
         emailLink.href = 'mailto:' + listData[i].email;
         phoneLink.textContent = 'phone: ' + listData[i].phone;
         phoneLink.href = 'tel:' + listData[i].phone;
+
         listItem.appendChild(nameP);
         listItem.appendChild(emailLinkContainer);
         emailLinkContainer.appendChild(emailLink);
