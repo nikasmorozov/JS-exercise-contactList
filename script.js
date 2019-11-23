@@ -9,10 +9,8 @@ makeList();
 document.getElementById('personAdd').addEventListener('click', push);
 document.getElementById('personLastDelete').addEventListener('click', personLastDelete);
 document.getElementById('deleteSelected').addEventListener('click', deleteSelected);
-// document.getElementById('pop').addEventListener('click', pop);
-// document.getElementById('shift').addEventListener('click', shift);
-// document.getElementById('reverse').addEventListener('click', reverse);
-// document.getElementById('splice').addEventListener('click', splice);
+document.getElementById('editSelected').addEventListener('click', editSelected);
+
 // document.getElementById('sortAZ').addEventListener('click', sortAZ);
 // document.getElementById('sortZA').addEventListener('click', sortZA);
 
@@ -29,6 +27,18 @@ function push() {
 function deleteSelected() {
     personList = personList.filter(function (value) {
         return value.isChecked == false;
+    });
+    window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
+    makeList();
+}
+
+function editSelected() {
+    personList.forEach(function(value){
+        if(value.isChecked == true) {
+            value.name = personName.value;
+            value.email = personEmail.value;
+            value.phone = personPhone.value;
+        }
     });
     window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
     makeList();

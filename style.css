@@ -20,7 +20,7 @@ input, button {
     background: #0277bd;
     border: none;
     text-align: center;
-    border-radius: 10px;
+    /* border-radius: 10px; */
     color: white;
     margin-bottom: 10px;
 }
@@ -30,7 +30,8 @@ button:nth-of-type(1) {
 }
 
 input::placeholder {
-    color: white;
+    color: lightgray;
+    font-size: 16px;
 }
 
 li {
@@ -38,7 +39,7 @@ li {
     font-weight: 700;
     width: 300px;
     background: #0277bd;
-    border-radius: 10px;
+    /* border-radius: 10px; */
     /* padding: 4px 20px 5px 20px; */
     margin-bottom: 10px;
     border-top: 15px solid #004c8c;
@@ -52,7 +53,6 @@ li:hover {
     display: flex;
     flex-direction: column;
     width: 300px;
-    margin-top: 30px;
     height: 90vh;
 }
 
