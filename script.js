@@ -12,7 +12,7 @@ document.getElementById('deleteSelected').addEventListener('click', deleteSelect
 document.getElementById('editSelected').addEventListener('click', editSelected);
 document.getElementById('showFavorites').addEventListener('click', showFavorites);
 document.getElementById('search').addEventListener('click', search);
-
+document.getElementById('sortAZ').addEventListener('click', sortAZ);
 
 function push() {
     personList.push({ name: personName.value, email: personEmail.value, phone: personPhone.value, isChecked: false, isFavorite: false });
@@ -80,11 +80,17 @@ function inverseFavorite(iForList) {
     }
 };
 
+function sortAZ() {
+    sortedList = personList.sort((a, b) => (a.name > b.name) ? 1 : -1)
+    // window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
+    makeList(sortedList);
+}
+
 function clearInput() {
     personName.value = '';
     personEmail.value = '';
     personPhone.value = '';
-}
+};
 
 function makeList(personList) {
     document.getElementById('output').textContent = '';
