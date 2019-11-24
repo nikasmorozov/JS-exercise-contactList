@@ -4,24 +4,20 @@ let personName = document.getElementById('personName');
 let personEmail = document.getElementById('personEmail');
 let personPhone = document.getElementById('personPhone');
 
-makeList();
+makeList(personList);
 
 document.getElementById('personAdd').addEventListener('click', push);
 document.getElementById('personLastDelete').addEventListener('click', personLastDelete);
 document.getElementById('deleteSelected').addEventListener('click', deleteSelected);
 document.getElementById('editSelected').addEventListener('click', editSelected);
 document.getElementById('showFavorites').addEventListener('click', showFavorites);
-
-
-// document.getElementById('sortAZ').addEventListener('click', sortAZ);
-// document.getElementById('sortZA').addEventListener('click', sortZA);
-
+document.getElementById('search').addEventListener('click', search);
 
 
 function push() {
     personList.push({ name: personName.value, email: personEmail.value, phone: personPhone.value, isChecked: false, isFavorite: false });
     window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
-    makeList();
+    makeList(personList);
     clearInput();
 }
 
@@ -31,20 +27,26 @@ function deleteSelected() {
         return value.isChecked == false;
     });
     window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
-    makeList();
+    makeList(personList);
 }
 
 function showFavorites() {
     favoriteList = personList.filter(function (value) {
         return value.isFavorite;
     });
-    // window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
-    makeList();
+    makeList(favoriteList);
+}
+
+function search() {
+    searchList = personList.filter(function (value) {
+        return value.name == personName.value || value.email == personEmail.value || value.phone == personPhone.value;
+    });
+    makeList(searchList);
 }
 
 function editSelected() {
     personList.forEach(function(value){
-        if(value.isChecked == true) {
+        if(value.isChecked) {
             value.name = personName.value;
             value.email = personEmail.value;
             value.phone = personPhone.value;
@@ -52,20 +54,21 @@ function editSelected() {
         }
     });
     window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
-    makeList();
+    makeList(personList);
+    clearInput();
 }
 
 function personLastDelete() {
     personList.pop();
     window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
-    makeList();
+    makeList(personList);
 }
 
 function inverseChecked(iForList) {
     return function () {
         personList[iForList].isChecked = !personList[iForList].isChecked;
         window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
-        makeList();
+        makeList(personList);
     }
 };
 
@@ -73,21 +76,9 @@ function inverseFavorite(iForList) {
     return function () {
         personList[iForList].isFavorite = !personList[iForList].isFavorite;
         window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
-        makeList();
+        makeList(personList);
     }
 };
-
-// function sortAZ() {
-//     guestList.sort();
-//     makeList();
-//     refresh();
-// }
-
-// function sortZA() {
-//     guestList.sort(function(a, b){return b - a});
-//     makeList();
-//     refresh();
-// }
 
 function clearInput() {
     personName.value = '';
@@ -95,10 +86,10 @@ function clearInput() {
     personPhone.value = '';
 }
 
-function makeList() {
+function makeList(personList) {
     document.getElementById('output').textContent = '';
     // Establish the array which acts as a data source for the list
-    let listData = JSON.parse(window.localStorage.getItem(CONTACTSTLIST)) || [],
+    let listData = personList,
         // Make a container element for the list
         listContainer = document.createElement('div'),
         // Make the list
