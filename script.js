@@ -17,7 +17,7 @@ document.getElementById('editSelected').addEventListener('click', editSelected);
 
 
 function push() {
-    personList.push({ name: personName.value, email: personEmail.value, phone: personPhone.value, isChecked: false, isFavorite: true });
+    personList.push({ name: personName.value, email: personEmail.value, phone: personPhone.value, isChecked: false, isFavorite: false });
     window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
     makeList();
     clearInput();
@@ -45,7 +45,6 @@ function editSelected() {
     makeList();
 }
 
-
 function personLastDelete() {
     personList.pop();
     window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
@@ -55,6 +54,14 @@ function personLastDelete() {
 function inverseChecked(iForList) {
     return function () {
         personList[iForList].isChecked = !personList[iForList].isChecked;
+        window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
+        makeList();
+    }
+};
+
+function inverseFavorite(iForList) {
+    return function () {
+        personList[iForList].isFavorite = !personList[iForList].isFavorite;
         window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
         makeList();
     }
@@ -105,9 +112,16 @@ function makeList() {
         }
 
         // Add the item text
-        let checkbox = document.createElement('input');
-        let label = document.createElement('label')
+        const checkbox = document.createElement('input');
+        const label = document.createElement('label')
         label.htmlFor = "id";
+        const btnFavorite = document.createElement('button');
+        if (listData[i].isFavorite) {
+            btnFavorite.textContent = '  ' + String.fromCodePoint(0x2605);
+        }
+        else {
+            btnFavorite.textContent = '  ' + String.fromCodePoint(0x2606);
+        };
         const nameP = document.createElement('p');
         const emailLinkContainer = document.createElement('p');
         const emailLink = document.createElement('a');
@@ -121,6 +135,7 @@ function makeList() {
         checkbox.id = 'checkbox-' + [iForList];
 
         label.addEventListener('click', inverseChecked(iForList));
+        btnFavorite.addEventListener('click', inverseFavorite(iForList));
 
         nameP.textContent = listData[i].name;
         emailLink.textContent = 'email: ' + listData[i].email;
@@ -129,6 +144,7 @@ function makeList() {
         phoneLink.href = 'tel:' + listData[i].phone;
 
         listItem.appendChild(nameP);
+        nameP.appendChild(btnFavorite);
         listItem.appendChild(emailLinkContainer);
         emailLinkContainer.appendChild(emailLink);
         listItem.appendChild(phoneLinkContainer);
@@ -137,12 +153,12 @@ function makeList() {
         listItem.appendChild(label);
         listItem.appendChild(emojiPlace);
         if (listData[i].isChecked) {
-            label.innerText = String.fromCodePoint(0x1F354);
+            label.textContent = '  ' + String.fromCodePoint(0x2611);
         }
         else {
-            label.innerText = String.fromCodePoint(0x1F35F);
-        }
-       
+            label.textContent = '  ' + '☐';
+        };
+
         // Add listItem to the listElement
         listElement.appendChild(listItem);
     }
