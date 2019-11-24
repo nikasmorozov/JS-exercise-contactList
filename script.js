@@ -17,7 +17,7 @@ document.getElementById('editSelected').addEventListener('click', editSelected);
 
 
 function push() {
-    personList.push({ name: personName.value, email: personEmail.value, phone: personPhone.value, isChecked: false });
+    personList.push({ name: personName.value, email: personEmail.value, phone: personPhone.value, isChecked: false, isFavorite: true });
     window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
     makeList();
     clearInput();
@@ -38,19 +38,13 @@ function editSelected() {
             value.name = personName.value;
             value.email = personEmail.value;
             value.phone = personPhone.value;
+            value.isChecked = false;
         }
     });
     window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
     makeList();
 }
 
-
-
-// function unShift() {
-//     guestList.unshift(guestName.value);
-//     makeList();
-//     refresh();
-// }
 
 function personLastDelete() {
     personList.pop();
@@ -106,23 +100,27 @@ function makeList() {
     for (i = 0; i < numberOfListItems; ++i) {
         // create an item for each one
         listItem = document.createElement('li');
+        if (listData[i].isFavorite) {
+            listItem.classList.add('isFavorite')
+        }
 
         // Add the item text
         let checkbox = document.createElement('input');
-        let iForList = i;
-
-        checkbox.type = "checkbox";
-        checkbox.checked = listData[i].isChecked;
-
-        checkbox.addEventListener('click', inverseChecked(iForList));
-
-        checkbox.id = "checkboxID-" + i;
-
+        let label = document.createElement('label')
+        label.htmlFor = "id";
         const nameP = document.createElement('p');
         const emailLinkContainer = document.createElement('p');
         const emailLink = document.createElement('a');
         const phoneLinkContainer = document.createElement('p');
         const phoneLink = document.createElement('a');
+        const emojiPlace = document.createElement('p');
+        let iForList = i;
+
+        checkbox.type = "checkbox";
+        checkbox.checked = listData[i].isChecked;
+        checkbox.id = 'checkbox-' + [iForList];
+
+        label.addEventListener('click', inverseChecked(iForList));
 
         nameP.textContent = listData[i].name;
         emailLink.textContent = 'email: ' + listData[i].email;
@@ -136,7 +134,15 @@ function makeList() {
         listItem.appendChild(phoneLinkContainer);
         phoneLinkContainer.appendChild(phoneLink);
         listItem.appendChild(checkbox);
-
+        listItem.appendChild(label);
+        listItem.appendChild(emojiPlace);
+        if (listData[i].isChecked) {
+            label.innerText = String.fromCodePoint(0x1F354);
+        }
+        else {
+            label.innerText = String.fromCodePoint(0x1F35F);
+        }
+       
         // Add listItem to the listElement
         listElement.appendChild(listItem);
     }
