@@ -13,6 +13,8 @@ document.getElementById('editSelected').addEventListener('click', editSelected);
 document.getElementById('showFavorites').addEventListener('click', showFavorites);
 document.getElementById('search').addEventListener('click', search);
 document.getElementById('sortAZ').addEventListener('click', sortAZ);
+document.getElementById('showAll').addEventListener('click', showAll);
+
 
 function push() {
     personList.push({ name: personName.value, email: personEmail.value, phone: personPhone.value, isChecked: false, isFavorite: false });
@@ -84,7 +86,11 @@ function sortAZ() {
     sortedList = personList.sort((a, b) => (a.name > b.name) ? 1 : -1)
     // window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
     makeList(sortedList);
-}
+};
+
+function showAll() {
+    makeList(personList);
+};
 
 function clearInput() {
     personName.value = '';
