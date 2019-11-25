@@ -4,7 +4,8 @@ let personName = document.getElementById('personName');
 let personEmail = document.getElementById('personEmail');
 let personPhone = document.getElementById('personPhone');
 
-makeList(personList);
+whichToRender(personList);
+
 
 document.getElementById('personAdd').addEventListener('click', push);
 document.getElementById('personLastDelete').addEventListener('click', personLastDelete);
@@ -19,7 +20,7 @@ document.getElementById('showAll').addEventListener('click', showAll);
 function push() {
     personList.push({ name: personName.value, email: personEmail.value, phone: personPhone.value, isChecked: false, isFavorite: false });
     window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
-    makeList(personList);
+    whichToRender();
     clearInput();
 }
 
@@ -29,21 +30,22 @@ function deleteSelected() {
         return value.isChecked == false;
     });
     window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
-    makeList(personList);
+    whichToRender();
 }
 
 function showFavorites() {
     favoriteList = personList.filter(function (value) {
         return value.isFavorite;
     });
-    makeList(favoriteList);
+    whichToRender(favoriteList);
 }
 
 function search() {
     searchList = personList.filter(function (value) {
-        return value.name == personName.value || value.email == personEmail.value || value.phone == personPhone.value;
+        return value.name == personName.value;
     });
-    makeList(searchList);
+    whichToRender(searchList);
+    clearInput();
 }
 
 function editSelected() {
@@ -56,21 +58,21 @@ function editSelected() {
         }
     });
     window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
-    makeList(personList);
+    whichToRender();
     clearInput();
 }
 
 function personLastDelete() {
     personList.pop();
     window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
-    makeList(personList);
+    whichToRender();
 }
 
 function inverseChecked(iForList) {
     return function () {
         personList[iForList].isChecked = !personList[iForList].isChecked;
         window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
-        makeList(personList);
+        whichToRender();
     }
 };
 
@@ -78,18 +80,19 @@ function inverseFavorite(iForList) {
     return function () {
         personList[iForList].isFavorite = !personList[iForList].isFavorite;
         window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
-        makeList(personList);
+        whichToRender();
     }
 };
 
 function sortAZ() {
+    //naudoti locale compare
     sortedList = personList.sort((a, b) => (a.name > b.name) ? 1 : -1)
     // window.localStorage.setItem(CONTACTSTLIST, JSON.stringify(personList));
-    makeList(sortedList);
+    whichToRender(sortedList);
 };
 
 function showAll() {
-    makeList(personList);
+    whichToRender();
 };
 
 function clearInput() {
@@ -98,18 +101,27 @@ function clearInput() {
     personPhone.value = '';
 };
 
-function makeList(personList) {
+function whichToRender(listToCheck) {
+    if (listToCheck) {
+        listToRender = listToCheck
+    }
+    else {
+        listToRender = personList
+    }
+    makeList();
+};
+
+function makeList() {
+
     document.getElementById('output').textContent = '';
     // Establish the array which acts as a data source for the list
-    let listData = personList,
+        let listData = listToRender;
         // Make a container element for the list
-        listContainer = document.createElement('div'),
+        let listContainer = document.createElement('div');
         // Make the list
-        listElement = document.createElement('ul'),
+        let listElement = document.createElement('ul');
         // Set up a loop that goes through the items in listItems one at a time
-        numberOfListItems = listData.length,
-        listItem,
-        i;
+        let numberOfListItems = listData.length;
 
     // Add it to the page
     document.getElementById('output').appendChild(listContainer);
@@ -117,23 +129,21 @@ function makeList(personList) {
 
 
 
-    for (i = 0; i < numberOfListItems; ++i) {
+    for (let i = 0; i < numberOfListItems; ++i) {
         // create an item for each one
-        listItem = document.createElement('li');
+        let listItem = document.createElement('li');
         if (listData[i].isFavorite) {
             listItem.classList.add('isFavorite')
         }
 
         // Add the item text
-        let iForList = i;
-
         const checkbox = document.createElement('input');
         const label = document.createElement('label')
         label.htmlFor = "id";
         checkbox.type = "checkbox";
         checkbox.checked = listData[i].isChecked;
-        checkbox.id = 'checkbox-' + [iForList];
-        label.addEventListener('click', inverseChecked(iForList));
+        checkbox.id = 'checkbox-' + [i];
+        label.addEventListener('click', inverseChecked(i));
         
         const btnFavorite = document.createElement('button');
         if (listData[i].isFavorite) {
@@ -142,7 +152,7 @@ function makeList(personList) {
         else {
             btnFavorite.textContent = '  ' + String.fromCodePoint(0x2606);
         };
-        btnFavorite.addEventListener('click', inverseFavorite(iForList));
+        btnFavorite.addEventListener('click', inverseFavorite(i));
 
         const nameP = document.createElement('p');
         const emailLinkContainer = document.createElement('p');

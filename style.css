@@ -115,7 +115,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 input[type=checkbox] {
-    display: none;
+    opacity: 0;
 }
 
 button, label, p button {
@@ -123,5 +123,5 @@ button, label, p button {
 }
 
 label {
-    margin-left: 260px;
+    margin-left: 240px;
 }
