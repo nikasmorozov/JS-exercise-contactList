@@ -24,6 +24,10 @@ input, button {
     padding: 5px;
 }
 
+input:hover, button:hover {
+    background-color: #58a5f0;
+}
+
 p button, p button:nth-of-type(1) {
     margin: 0;
     background: none;
@@ -114,7 +118,7 @@ input[type=checkbox] {
     display: none;
 }
 
-label, p button {
+button, label, p button {
     cursor: pointer;
 }
 
