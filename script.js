@@ -101,13 +101,8 @@ function clearInput() {
     personPhone.value = '';
 };
 
-function whichToRender(listToCheck) {
-    if (listToCheck) {
+function whichToRender(listToCheck = personList) {
         listToRender = listToCheck
-    }
-    else {
-        listToRender = personList
-    }
     makeList();
 };
 
